@@ -6,7 +6,7 @@ Examples:
 • concat([1, [2, 3]], [4], [1, [2, 3], 4]) is true.
 You may assume the given arguments are always lists.
 */
-
+concat(L1, L2, L) :- append(L1, L2, L).
 
 /*
 element_at(X, N, L): meaning the element X is the Nth element in list L.
@@ -16,7 +16,7 @@ Examples:
 • element_at(2, 1, [[2], 3, 4]) is false.
 • element_at(5, 2, [3, 2, 4]) is false.
 */
-
+element_at(X, N, L) :- nth1(N, L, X).
 
 /*
 reverse(L1, L2): meaning the reverse of list L1 is L2.
@@ -27,7 +27,7 @@ Examples:
 • reverse([1,[2,3],4,[5]], [[5],4,[3,2],1]) is false.
 • reverse([], []) is true.
 */
-
+% reverse(L1, L2) :- 
 
 /*
 flatten(L1, L2): Given a list L1, its flattened version is L2.
