@@ -61,3 +61,7 @@ Examples:
 • compress([1, 2, [3, 4], [5], [5], [3]], [1, 2, [3, 4], [5], [3]]) is true.
 */
 
+compress([], []).
+compress(L1, L2) :- compress_help(L1, L2, []).
+%use head of l1, go through l2 and see if duplicates, then move to next item of l1 until []
+% if ([], l, l), good to go
