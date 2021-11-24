@@ -43,5 +43,11 @@ queens(N, Q, R, C, X, Y, Z) :-
     R1 is R + 1,
     queens(N, Q, R1, 1, X, Y, Z).
 queens(N, Q, R, C, X, Y, Z) :- 
+    R1 is R + 1,
     Pos is R + C,
     Neg is R - C,
+    nonmember(C, X),
+    nonmember(Pos, Y),
+    nonmember(Neg, Z),
+    queens(N, [C | Q], R1, 1, [C | X], [Pos | Y], [Neg | Z]).
+
