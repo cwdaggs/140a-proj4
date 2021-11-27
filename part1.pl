@@ -7,8 +7,8 @@ Examples:
 You may assume the given arguments are always lists.
 https://www.cis.upenn.edu/~matuszek/Concise%20Guides/Concise%20Prolog.html
 */
-concat([], L, L).
-concat([A | L1], L2, [A | L]) :- concat(L1, L2, L).
+my_concat([], L, L).
+my_concat([A | L1], L2, [A | L]) :- my_concat(L1, L2, L).
 
 /*
 element_at(X, N, L): meaning the element X is the Nth element in list L.
@@ -35,9 +35,9 @@ Examples:
 • my_reverse([1,[2,3],4,[5]], [[5],4,[3,2],1]) is false.
 • my_reverse([], []) is true.
 */
-my_reverse([], []). 
+my_reverse([], []) :- !. 
 my_reverse(L1, L2) :- reverse_acc(L1, L2, []).
-reverse_acc(L, L, []).
+% reverse_acc(L, L, []).
 reverse_acc([], L, L).
 reverse_acc([H|T], L2, L):-  reverse_acc(T, L2, [H|L]).
 
@@ -51,6 +51,14 @@ Examples:
  Can use append here
 */
 
+my_flatten([], []) :- !.
+my_flatten(L1, L2) :- flatten_helper(L1, L2, []).
+flatten_helper([], L2, L2).
+flatten_helper([H|T], L2, L3) :- flatten_helper(T, L2, [H], []).
+flatten_helper(L1, L2, [H|T], L3) :- 
+    append(L3, H, L4),
+    flatten_helper(L1, L2, T, L4).
+flatten_helper([H|T], L2, [], L3) :- flatten_helper(T, L2, H, L3).
 
 /*
 compress(L1, L2): Given a list L1, L2 is its compressed version by eliminating the duplicates.
@@ -62,6 +70,11 @@ Examples:
 */
 
 compress([], []).
-compress(L1, L2) :- compress_help(L1, L2, []).
+compress(L1, L2) :- compress_help(L1, L1, L2, []).
+% L1 has run out of elements, check if L2 and L3 are equal
+compress_help([], [], L2, L2). 
+compress_help(L1, [H|T], L2, []) :- compress_help(L1, T, L2, H, H).
+% compress_help(L1, [H|T], L2, X, L3) :- 
+compress_help([H|T], [], L2, X, L3) :- compress_help(T, T, L2, []). 
 %use head of l1, go through l2 and see if duplicates, then move to next item of l1 until []
 % if ([], l, l), good to go
