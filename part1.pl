@@ -37,7 +37,6 @@ Examples:
 */
 my_reverse([], []) :- !. 
 my_reverse(L1, L2) :- reverse_acc(L1, L2, []).
-% reverse_acc(L, L, []).
 reverse_acc([], L, L).
 reverse_acc([H|T], L2, L):-  reverse_acc(T, L2, [H|L]).
 
@@ -51,14 +50,18 @@ Examples:
  Can use append here
 */
 
+
 my_flatten([], []) :- !.
 my_flatten(L1, L2) :- flatten_helper(L1, L2, []).
 flatten_helper([], L2, L2).
-flatten_helper([H|T], L2, L3) :- flatten_helper(T, L2, [H], []).
-flatten_helper(L1, L2, [H|T], L3) :- 
-    append(L3, H, L4),
-    flatten_helper(L1, L2, T, L4).
-flatten_helper([H|T], L2, [], L3) :- flatten_helper(T, L2, H, L3).
+flatten_helper([[]|T], L2, L3) :- flatten_helper(T, L2, L3).
+% For atomic elements
+flatten_helper([H|T], L2, L3) :-
+    H \= [_|_],
+    append(L3, [H], L4),
+    flatten_helper(T, L2, L4).
+% Breaks apart head element from list but introduces blank list, handled above
+flatten_helper([[H|T1]|T2], L2, L3) :- flatten_helper([H|[T1|T2]], L2, L3).
 
 /*
 compress(L1, L2): Given a list L1, L2 is its compressed version by eliminating the duplicates.
@@ -69,12 +72,11 @@ Examples:
 • compress([1, 2, [3, 4], [5], [5], [3]], [1, 2, [3, 4], [5], [3]]) is true.
 */
 
+my_member(X, [X|_]).
+my_member(X, [_|Tail]) :- my_member(X, Tail).
+
 compress([], []).
-compress(L1, L2) :- compress_help(L1, L1, L2, []).
-% L1 has run out of elements, check if L2 and L3 are equal
-compress_help([], [], L2, L2). 
-compress_help(L1, [H|T], L2, []) :- compress_help(L1, T, L2, H, H).
-% compress_help(L1, [H|T], L2, X, L3) :- 
-compress_help([H|T], [], L2, X, L3) :- compress_help(T, T, L2, []). 
-%use head of l1, go through l2 and see if duplicates, then move to next item of l1 until []
-% if ([], l, l), good to go
+% If head not in tail, break, and remove head from both l1 and l2
+% Else, just remove head since its in the list elsewhere and don't remove from L2
+compress([H|T], L2) :- my_member(H, T), !, compress(T, L2).
+compress([H|T], [H|T1]) :- compress(T, T1).
