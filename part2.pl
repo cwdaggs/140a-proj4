@@ -12,31 +12,30 @@ Examples:
 • Given a 4 ×4 board, there are two ways to place the 4 queens: [2, 4, 1, 3] and [3, 1, 4, 2].
 */
 
-/*
-Have to maintain the columns placed and positive diagonals and negative diagonals
-Negative diagonal = left to right, top to bottom; row - column remains constant, bounds [-(n-1), n-1]
-Positive diagonal = left to right, top to bottom; r+c remains constant, bounds [0, N+2]
-*/
+queens_helper([], _).
 
+queens_helper([H|T], N) :-
+    % Breaks down to empty list
+	queens_helper(T, N), 
+    /* Then each sublist will be checked starting on the last column in Q list
+    The total amount of solutions for any N is an even number, where
+    half of the solutions are just the reverse of the other half, so it
+    technically doesn't matter whether we start from the back or front of 
+    a permutation */
+	column_backtrack(H, T, 1).
 
+column_backtrack(_, [], _).
 
-queens_helper([],_). %No queens is a solution for any N queens problem. All queens are in a safe position.
-
-queens_helper([H|T],N) :-
-	queens_helper(T, N), %first we solve the subproblem
-	check_solution(H, T, 1).
-
-check_solution(_,[], _).
-
-check_solution(C,[C1|Clist],R) :-
-	% C =\= C1, %not on the same row	
-	Test is abs(C1-C),
-	Test =\= R, %diagonal distance
+column_backtrack(C, [C1|Cs], R) :-
+	Diag is abs(C-C1),
+	Diag =\= R,
 	R1 is R + 1,
-	check_solution(C,Clist,R1).
+	column_backtrack(C, Cs, R1).
 
 queens(N, Q) :-
     length(Q, N),
     numlist(1, N, L),
+    % Ensures list of unique elements
     permutation(L, Q),
     queens_helper(Q, N).
+
