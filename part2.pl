@@ -15,13 +15,7 @@ Examples:
 queens_helper([], _).
 
 queens_helper([H|T], N) :-
-    % Breaks down to empty list
 	queens_helper(T, N), 
-    /* Then each sublist will be checked starting on the last column in Q list
-    The total amount of solutions for any N is an even number, where
-    half of the solutions are just the reverse of the other half, so it
-    technically doesn't matter whether we start from the back or front of 
-    a permutation */
 	column_backtrack(H, T, 1).
 
 column_backtrack(_, [], _).
@@ -38,4 +32,3 @@ queens(N, Q) :-
     % Ensures list of unique elements
     permutation(L, Q),
     queens_helper(Q, N).
-
