@@ -19,6 +19,11 @@ Examples:
 • element_at(5, 2, [3, 2, 4]) is false.
 https://stackoverflow.com/questions/12939425/prolog-access-specific-member-of-list
 */
+my_element_at(X, 1, [X|_]).
+my_element_at(X, N, [_|T]) :- 
+    my_element_at(X, N1, T), 
+    N1 is N + 1.
+
 element_at(X, N, L) :- element_at(X, 1, N, L).
 element_at(X, N, N, [X|_]) :- !.
 element_at(X, C, N, [_|L]) :- 
